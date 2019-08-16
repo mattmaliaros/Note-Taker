@@ -37,6 +37,8 @@ app.get("/", function(req, res) {
     connection.query("Delete from notes where id = " + req.params.id, function(err, res){
       if (err) throw err;
       console.log("Deleted " + req.params.id);
+      notes.splice(req.params.id - 1, 1);
+      document.getElementById(this.id).empty();
     })
   })
   

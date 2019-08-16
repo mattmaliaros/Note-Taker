@@ -44,22 +44,25 @@
 <script>
      $.get("/api/notes/", function(data) {
         for (var i = 0; i <= data.length; i++){
+            let j = i + 1;
             var idNew = "ID: " + JSON.stringify(data[i].id) + "<br>";
             var titleNew ="Title: " + JSON.stringify(data[i].title)+ "<br>";
             var bodyNew = "Body: " + JSON.stringify(data[i].body) + "<br>";
             var div = $("<div></div>");
             div.append(idNew + titleNew + bodyNew);
-            var divId = div.attr('divId', i + 1);
+            var divId = div.attr('id', "id" + j);
             var buttons = $("<button>Delete</button>  <br>");
-            var buttId = buttons.attr('id', i + 1);
+            var buttId = buttons.attr('id', + j);
             // <button class = 'newButton'>Button</button>
             $("#newTable").append(div);
             $(div).append(buttons);
-            $("#" + i).on("click", function (){
+            $("#" + j).on("click", function (){
+              $("#id" + this.id).empty();
                 $.ajax({
                    method: "DELETE",
                    url: "notes/" + this.id
                 })
+                
 
         })
         }
@@ -79,6 +82,8 @@
     .then(function(data) {
       console.log("index.html", data);
       alert("New Note made");
+      $("#note-title").empty();
+      $("#note-body").empty();
       var endOfA = data.length;
     $("#newTable").append("ID: " + endOfA + "<br>");
     $("#newTable").append("Title: " + JSON.stringify(data[endOfA - 1].title)+ "<br>");
