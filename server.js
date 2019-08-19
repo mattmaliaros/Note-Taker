@@ -34,20 +34,27 @@ app.get("/", function(req, res) {
   })
   app.delete("/notes/:id", function(req, res) {
     // console.log(req.params.id);
-    connection.query("Delete from notes where id = " + req.params.id, function(err, res){
+    connection.query("Delete from notes where id = '" + req.params.id + "'", function(err, res){
       if (err) throw err;
       console.log("Deleted " + req.params.id);
-      notes.splice(req.params.id - 1, 1);
-      document.getElementById(this.id).empty();
+      for(var i = 0; i < notes.length; i++)
+      {
+        if (req.params.id == notes[i].id){
+          notes.splice(i, 1);
+        }
+      }
+      // console.log(found);
+      // notes.splice(found, 1);
     })
-  })
+    })
+
   
   app.post("/api/notes", function(req, res) {
     // req.body hosts is equal to the JSON post sent from the user
     // This works because of our body parsing middleware
     var newNote = req.body;
     newNote.id = notes.length + 1;
-    newQuery = "Insert into notes(title, body) values('" + req.body.title + "', '" +  req.body.body + "');";
+    newQuery = "Insert into notes(id, title, body) values('" + req.body.id + "', '" + req.body.title + "', '" +  req.body.body + "');";
     // console.log(newQuery);
     connection.query(newQuery, function (error, result)
     {

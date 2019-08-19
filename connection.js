@@ -8,8 +8,8 @@ if (process.env.JAWSDB_URL) {
   connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
-    user: "newuser",
-    password: "user_password", // add your local password here.
+    user: "root",
+    password: "password", // add your local password here.
     database: "notetaker_db" // add your db name here
   });
 }

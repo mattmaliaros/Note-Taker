@@ -44,7 +44,8 @@
 <script>
      $.get("/api/notes/", function(data) {
         for (var i = 0; i <= data.length; i++){
-            let j = i + 1;
+            let j = JSON.stringify(data[i].id);
+            // alert(j);
             var idNew = "ID: " + JSON.stringify(data[i].id) + "<br>";
             var titleNew ="Title: " + JSON.stringify(data[i].title)+ "<br>";
             var bodyNew = "Body: " + JSON.stringify(data[i].body) + "<br>";
@@ -52,15 +53,17 @@
             div.append(idNew + titleNew + bodyNew);
             var divId = div.attr('id', "id" + j);
             var buttons = $("<button>Delete</button>  <br>");
-            var buttId = buttons.attr('id', + j);
+            var buttId = buttons.attr('id', JSON.stringify(data[i].id));
+            // alert(buttId.attr('id'));
             // <button class = 'newButton'>Button</button>
             $("#newTable").append(div);
             $(div).append(buttons);
             $("#" + j).on("click", function (){
-              $("#id" + this.id).empty();
+              $("#id" + j).empty();
+              alert("Hey");
                 $.ajax({
                    method: "DELETE",
-                   url: "notes/" + this.id
+                   url: "notes/" + j
                 })
                 
 
@@ -71,6 +74,7 @@
      $(".submit").on("click", function(event) {
     event.preventDefault();
     var newNote = {
+      //create a value in case they click it once
         title: $("#note-title")
         .val()
         .trim(),
@@ -80,14 +84,34 @@
     };
     $.post("/api/notes", newNote)
     .then(function(data) {
-      console.log("index.html", data);
-      alert("New Note made");
-      $("#note-title").empty();
-      $("#note-body").empty();
-      var endOfA = data.length;
-    $("#newTable").append("ID: " + endOfA + "<br>");
-    $("#newTable").append("Title: " + JSON.stringify(data[endOfA - 1].title)+ "<br>");
-    $("#newTable").append("Body: " + JSON.stringify(data[endOfA - 1].body)+ "<br>" +  "<br>");
+    alert("New Note made");
+    var title = $("#note-title").val().trim();
+    var body = $("#note-body").val().trim();
+    var endOfA = Math.max(data[data.length - 1].id + 1);
+    var eOAid = "ID: " + parseInt(endOfA -1) + "<br>";
+    var titleBodyNum = endOfA--;
+    $("#note-title").val('');
+    $("#note-body").val('');
+    var eOAtitle = 'Title: "' + title + '"<br>';
+    var eOAbody = 'Body: "' + body + '"<br>';
+    var newdiv = $("<div></div>");
+    newdiv.append(eOAid + eOAtitle + eOAbody);
+    var newdivId = newdiv.attr('id', "id" + endOfA);
+    var newButtons = $("<button>Delete</button>");
+    var stringEnd = endOfA.toString();
+    var newButtId = newButtons.attr('id', "button" + stringEnd);
+    $("#newTable").append(newdiv);
+    $(newdiv).append(newButtons);
+    $("#button" + stringEnd).on("click", function (){
+              $(newdiv).empty();
+              alert("hello");
+                $.ajax({
+                   method: "DELETE",
+                   url: "notes/" + stringEnd
+                })
+                
+
+        })
     });
   });
 </script>
