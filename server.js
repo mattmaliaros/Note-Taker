@@ -1,4 +1,4 @@
-var connection = require('../Note Taker/connection');
+var connection = require('../Note Taker/connection.js');
 var express = require("express");
 var path = require("path");
 
